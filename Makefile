@@ -1,3 +1,4 @@
+SHELL := /usr/bin/env bash
 IMAGEDIRS = $(shell ls -d containers/* | cut -d '/' -f 2)
 BOLD := $(shell tput -T linux bold)
 PURPLE := $(shell tput -T linux setaf 5)
