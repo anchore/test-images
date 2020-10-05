@@ -25,7 +25,8 @@ help:
 
 .PHONY: lint
 lint: ## TODO: with hadolint or similar
-
+	$(call title,Building container image anchore/test_image:$(NAME))
+	docker run --rm -i hadolint/hadolint < Dockerfile
 
 .PHONY: build
 build: ## build container with the current Dockerfile

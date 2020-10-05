@@ -22,8 +22,14 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "$(BOLD)$(CYAN)%-25s$(RESET)%s\n", $$1, $$2}'
 
 
-#.PHONY: lint
-#lint: ## TODO: with hadolint or similar
+.PHONY: lint
+lint: ## Uses hadolint container to ensure Dockerfiles are clean
+	@for dir in $(shell ls -d containers/*); do \
+		echo "Linting container: $${dir}"; \
+		pushd $${dir}; \
+		make lint || exit 1; \
+		popd > /dev/null; \
+	done
 
 
 .PHONY: test
