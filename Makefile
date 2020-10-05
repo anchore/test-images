@@ -25,6 +25,10 @@ help:
 #lint: ## TODO: with hadolint or similar
 
 
+.PHONY: test
+test: build ## Lint first, and then build all containers
+
+
 .PHONY: build
 build: ## Create all containers in the containers sub directory
 	@for dir in $(shell ls -d containers/*); do \
