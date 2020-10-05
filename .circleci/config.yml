@@ -32,25 +32,13 @@
 # Start circleci configuration
 version: 2.1
 
-commands:
-  run_tests:
-    description: |
-      Uses make script to run tests
-      Saves the tox cache & stores log output as artifacts
-    parameters:
-      test_type:
-        type: string
-    steps:
-      - run:
-          name: run tests
-          command: make test
-
 jobs:
   test:
     docker:
       - image: circleci/python:3.8
     environment: *global_environment_vars
     steps:
+      - setup_remote_docker
       - checkout
       - run:
           name: run tests
