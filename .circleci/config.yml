@@ -1,0 +1,99 @@
+# CircleCI 2.1 configuration file
+# Check https://circleci.com/docs/2.0/configuration-reference/ for more details
+#
+# Note: YAML anchors allow an object to be re-used, reducing duplication.
+# The ampersand declares an alias for an object, then later the `<<: *name`
+# syntax dereferences it.
+#
+# Define YAML anchors
+.global_environment_vars: &global_environment_vars
+  PROD_IMAGE_REPO: anchore/engine-cli
+  LATEST_RELEASE_MAJOR_VERSION: 0.8
+  TERM: xterm
+
+.attach_workspace: &attach_workspace
+  attach_workspace:
+    at: /home/circleci/workspace/
+
+.load_docker_image: &load_docker_image
+  run:
+    name: Load Docker image layer cache
+    command: |
+      docker load -i "/home/circleci/workspace/caches/${CIRCLE_SHA1}.tar" || true
+
+.ssh_forward_port: &ssh_forward_port
+  run:
+    name: Forward remote-docker ports for testing
+    command: |
+      ssh -MS anchore-api -fN4 -L 8228:localhost:8228 remote-docker
+      ssh -MS k8s-api -fN4 -L 32768:localhost:32768 remote-docker
+
+
+# Start circleci configuration
+version: 2.1
+
+commands:
+  run_tests:
+    description: |
+      Uses make script to run tests
+      Saves the tox cache & stores log output as artifacts
+    parameters:
+      test_type:
+        type: string
+    steps:
+      - run:
+          name: run tests
+          command: make test
+
+jobs:
+  test:
+    docker:
+      - image: circleci/python:3.8
+    environment: *global_environment_vars
+    steps:
+      - checkout
+      - run:
+          name: run tests
+          command: make test
+
+# TODO: linting is not yet implemented, uncomment when it is hooked up in the
+# Makefile
+#  lint:
+#    docker:
+#      - image: circleci/python:3.8
+#    environment: *global_environment_vars
+#    steps:
+#      - checkout
+#      - run:
+#          name: lint Dockerfiles
+#          command: make lint
+
+# TODO: push container images over to the registry
+#  push_image:
+#    description: Uses make script to push images to DockerHub - dev, rc, prod
+#    parameters:
+#      make_job:
+#        type: string
+#    docker:
+#      - image: circleci/python:3.8
+#    environment: *global_environment_vars
+#    steps:
+#      - setup_remote_docker
+#      - checkout
+#      - <<: *attach_workspace
+#      - <<: *load_docker_image
+#      - run:
+#          name: Push to Dockerhub
+#          command: make << parameters.make_job >>
+
+workflows:
+  default_workflow:
+    jobs:
+      - test
+      # TODO to push images to dockerhub
+      #- push_image:
+      #    name: push_dev_image
+      #    make_job: push-dev
+      #    context: dockerhub
+      #    requires:
+      #      - test
