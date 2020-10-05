@@ -35,6 +35,6 @@ build: ## Create all containers in the containers sub directory
 	@for dir in $(shell ls -d containers/*); do \
 		echo "Building container: $${dir}"; \
 		pushd $${dir}; \
-		make build; \
+		make build || exit 1; \
 		popd > /dev/null; \
 	done
