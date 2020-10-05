@@ -44,17 +44,16 @@ jobs:
           name: run tests
           command: make test
 
-# TODO: linting is not yet implemented, uncomment when it is hooked up in the
-# Makefile
-#  lint:
-#    docker:
-#      - image: circleci/python:3.8
-#    environment: *global_environment_vars
-#    steps:
-#      - checkout
-#      - run:
-#          name: lint Dockerfiles
-#          command: make lint
+  lint:
+    docker:
+      - image: circleci/python:3.8
+    environment: *global_environment_vars
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run:
+          name: lint Dockerfiles
+          command: make lint
 
   push:
     description: Uses make script to push images to DockerHub
@@ -74,6 +73,7 @@ workflows:
   default_workflow:
     jobs:
       - test
+      - lint
 
   weekly:
     triggers:
