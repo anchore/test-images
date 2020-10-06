@@ -44,3 +44,12 @@ build: ## Create all containers in the containers sub directory
 		make build || exit 1; \
 		popd > /dev/null; \
 	done
+
+.PHONY: push
+push: ## Create all containers and push them to docker hub
+	@for dir in $(shell ls -d containers/*); do \
+		echo "Pushing container: $${dir}"; \
+		pushd $${dir}; \
+		make push || exit 1; \
+		popd > /dev/null; \
+	done

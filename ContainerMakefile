@@ -32,3 +32,9 @@ lint: ## TODO: with hadolint or similar
 build: ## build container with the current Dockerfile
 	$(call title,Building container image anchore/test_image:$(NAME))
 	docker build -t anchore/test_image:$(NAME) .
+
+.PHONY: push
+push: ## push built container to Docker Hub
+	$(call title,Pushing container image to docker hub anchore/test_image:$(NAME))
+	docker build -t anchore/test_image:$(NAME) .
+	docker push anchore/test_image:$(NAME)
