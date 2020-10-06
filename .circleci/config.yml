@@ -28,6 +28,11 @@
       ssh -MS anchore-api -fN4 -L 8228:localhost:8228 remote-docker
       ssh -MS k8s-api -fN4 -L 32768:localhost:32768 remote-docker
 
+.only_main_branch: &only_main_branch
+  branches:
+    only:
+      - main
+
 
 # Start circleci configuration
 version: 2.1
@@ -75,21 +80,18 @@ workflows:
       - test
       - lint
 
+  push_to_dockerhub:
+    jobs:
+      - push:
+          name: push_to_dockerhub
+          context: dockerhub
+          filters: *only_main_branch
+
   weekly:
     triggers:
       - schedule:
           cron: "0 0 1 * *"
-          filters:
-            branches:
-              only:
-                - main
+          filters: *only_main_branch
+
     jobs:
       - push
-
-      # TODO to push images to dockerhub
-      #- push_image:
-      #    name: push_dev_image
-      #    make_job: push-dev
-      #    context: dockerhub
-      #    requires:
-      #      - test
