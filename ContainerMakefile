@@ -16,7 +16,7 @@ endef
 
 
 .PHONY: all
-all: build
+all: lint build
 	@printf '$(SUCCESS)All checks pass!$(RESET)\n'
 
 help:
@@ -38,3 +38,8 @@ push: ## push built container to Docker Hub
 	$(call title,Pushing container image to docker hub anchore/test_image:$(NAME))
 	docker build -t anchore/test_image:$(NAME) .
 	docker push anchore/test_image:$(NAME)
+
+.PHONY: clean
+clean: ## Remove images with the assigned tag for test_images
+	$(call title,Removing image anchore/test_image:$(NAME))
+	docker rmi anchore/test_image:$(NAME)
