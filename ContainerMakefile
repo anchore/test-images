@@ -36,7 +36,7 @@ build: ## build container with the current Dockerfile
 .PHONY: push
 push: ## push built container to Docker Hub
 	$(call title,Pushing container image to docker hub anchore/test_image:$(NAME))
-	docker build -t anchore/test_image:$(NAME) .
+	docker build -t anchore/test_images:$(NAME) .
 	docker push anchore/test_images:$(NAME)
 
 .PHONY: clean
