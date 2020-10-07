@@ -28,6 +28,12 @@
       ssh -MS anchore-api -fN4 -L 8228:localhost:8228 remote-docker
       ssh -MS k8s-api -fN4 -L 32768:localhost:32768 remote-docker
 
+.authenticate_to_docker: &authenticate_to_docker
+  run:
+    name: Authenticate to Docker
+    command: |
+      echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+
 .only_main_branch: &only_main_branch
   branches:
     only:
@@ -70,6 +76,7 @@ jobs:
       - checkout
       - <<: *attach_workspace
       - <<: *load_docker_image
+      - <<: *authenticate_to_docker
       - run:
           name: Push to Dockerhub
           command: make push
