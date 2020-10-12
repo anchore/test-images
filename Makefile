@@ -26,7 +26,7 @@ help:
 lint: ## Uses hadolint container to ensure Dockerfiles are clean
 	@for dir in $(shell ls -d containers/*); do \
 		echo "Linting container: $${dir}"; \
-		pushd $${dir}; \
+		pushd $${dir} || exit 1; \
 		make lint || exit 1; \
 		popd > /dev/null; \
 	done
@@ -40,7 +40,7 @@ test: build ## Lint first, and then build all containers
 build: ## Create all containers in the containers sub directory
 	@for dir in $(shell ls -d containers/*); do \
 		echo "Building container: $${dir}"; \
-		pushd $${dir}; \
+		pushd $${dir} || exit 1; \
 		make build || exit 1; \
 		popd > /dev/null; \
 	done
@@ -49,7 +49,7 @@ build: ## Create all containers in the containers sub directory
 push: ## Create all containers and push them to docker hub
 	@for dir in $(shell ls -d containers/*); do \
 		echo "Pushing container: $${dir}"; \
-		pushd $${dir}; \
+		pushd $${dir} || exit 1; \
 		make push || exit 1; \
 		popd > /dev/null; \
 	done
