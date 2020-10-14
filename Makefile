@@ -33,7 +33,7 @@ lint: ## Uses hadolint container to ensure Dockerfiles are clean
 
 
 .PHONY: test
-test: build ## Lint first, and then build all containers
+test: build link_check ## Lint first, and then build all containers
 
 
 .PHONY: build
@@ -52,4 +52,12 @@ push: ## Create all containers and push them to docker hub
 		pushd $${dir} || exit 1; \
 		make push || exit 1; \
 		popd > /dev/null; \
+	done
+
+
+link_check: ## Make sure that all symlinks are correct
+	@for makefile in $(shell find containers -name Makefile); do \
+		echo -n "Verifying Makefile link: $${makefile}"; \
+		if [[ $$(readlink $${makefile}) != "../../ContainerMakefile" ]]; then echo "Path is not linked to ../../ContainerMakefile -> $${makefile}" && exit 1; fi; \
+		echo "	[OK]"; \
 	done
