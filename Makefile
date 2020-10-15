@@ -20,6 +20,9 @@ all: build
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "$(BOLD)$(CYAN)%-25s$(RESET)%s\n", $$1, $$2}'
+	@for dir in $(shell ls containers); do \
+		printf "$(BOLD)$(CYAN)%-25s$(RESET)Create the local %s container\n" $$dir $$dir; \
+	done
 
 
 .PHONY: lint
@@ -61,3 +64,6 @@ link_check: ## Make sure that all symlinks are correct
 		if [[ $$(readlink $${makefile}) != "../../ContainerMakefile" ]]; then echo "Path is not linked to ../../ContainerMakefile -> $${makefile}" && exit 1; fi; \
 		echo "	[OK]"; \
 	done
+
+%: ## do a local build
+	scripts/local.sh "$*"
