@@ -37,6 +37,14 @@ After your container merges to the `main` branch, it will be pushed to `anchore/
 of the directory, which in this case is `new`. The end result will create the following container: `anchore/test_images:new`.
 
 
+### Optional setups when building
+There are some situations where the default `ContainerMakefile` is insufficient to create an image along with `Dockerfile`. This is the case of the Java image, where
+there is a need to run some ephemeral containers to create a java artifact. In such cases, there is support for a `setup.sh` script that needs to be defined in the target. If
+this file exists, the `Makefile` will execute it as part of the `build` target. 
+
+Note: make sure the file is executable
+
+
 ## make targets
 A couple of other `make` commands are available for the symlinked `Makefile`, they are documented as part of the `make help` output.
 
