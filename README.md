@@ -43,3 +43,9 @@ A couple of other `make` commands are available for the symlinked `Makefile`, th
 * `make build`: builds the current container locally, tags it with the current directory name
 * `make clean`: Removes the container image associated with the directory. If the directory name is `new`, then it will try to remove `anchore/test_images:new`
 * `make lint`: Runs the `hadolint/hadolint` container passing the contents of the `Dockerfile` to stdin, this step is run as a verification when a PR is opened
+
+In addition to defined targets, the `Makefile` supports dynamic targets by looking into the `containers/` directory. Every sub-directory in that path becomes an available target to build it locally. For example, `containers/py38` is exposed and available with the following command:
+
+```
+$ make py38
+```
