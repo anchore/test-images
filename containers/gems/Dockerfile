@@ -9,7 +9,7 @@ RUN set -ex && \
     apk --no-cache add ruby=2.7.2-r3 ruby-dev=2.7.2-r3 && \
     gem install bundler:2.1.4 && \
 # install python, pip,  and pytest \
-    apk add --no-cache python3=3.8.7-r1 && \
+    apk add --no-cache python3=3.8.8-r0 && \
     python3 -m ensurepip && \
     pip3 install --no-cache-dir pytest==6.1.1 && \
     rm -rf /var/cache/apk/* && \
