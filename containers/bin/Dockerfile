@@ -11,7 +11,7 @@ FROM alpine:3.12.3
 # python2                       2.7.18-r0               custom
 # python3                       3.8.5-r0                PSF-2.0
 # ...
-RUN apk add --no-cache go=1.13.15-r0 python3=3.8.5-r1 python2=2.7.18-r0 busybox=1.31.1-r19
+RUN apk add --no-cache go=1.13.15-r0 python3=3.8.8-r0 python2=2.7.18-r0 busybox=1.31.1-r19
 
 # place the test fixtures (including positive and negative examples)
 #
