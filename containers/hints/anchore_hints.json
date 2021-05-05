@@ -1,34 +1,53 @@
 {
     "packages": [
-	{
-	    "name": "wicked",
-	    "version": "0.6.1",  
-	    "type": "gem"
-	},
-	{
-		"name": "ant",
-		"version": "1.10.42",
-		"type": "java"
-	},
-	{
-		"name": "aruba",
-		"version": "0.14.18",
-		"type": "gem"
-	},
-	{
-		"name": "pnpm",
-		"version": "6.2.8",
-		"type": "npm"
-	},
-	{
-		"name": "resty",
-		"version": "2.6.19",
-		"type": "go"
-	},
-	{
-		"name": "pytest",
-		"version": "6.2.6",
-		"type": "python"
-	}
+			{
+        "name": "gohint",
+        "version": "v0.10.0",
+        "type": "go"
+      },
+      {
+      	"name": "nugethint",
+      	"version": "1.0.0",
+      	"type": "nuget"
+      },
+      {
+      	"name": "binaryhint",
+      	"version": "2.0.0",
+      	"type": "binary"
+      },
+      {
+		    "name": "rpmhint",
+		    "version": "5.2.4-3.el8",
+		    "type": "rpm"
+			},
+      {
+        "name": "debhint",
+        "version": "1.0.0",
+        "type": "dpkg"
+      },
+      {
+        "name": "pythonhint",
+        "version": "1.0.0",
+        "type": "python"
+      },
+      {
+        "name": "alpinehint",
+        "version": "1.0-r3",
+        "type": "apkg"
+      },
+      {
+        "name": "gemhint",
+        "version": "1.0.0",
+        "type": "gem"
+      },
+      {
+        "name": "npmhint",
+        "version": "1.0.0",
+        "type": "npm"
+      },
+      {
+        "name": "javahint",
+        "version": "1.0.0",
+        "type": "java"
+      }
     ]
-}
