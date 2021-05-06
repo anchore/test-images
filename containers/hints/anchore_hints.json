@@ -1,0 +1,53 @@
+{
+    "packages": [
+			{
+        "name": "gohint",
+        "version": "v0.10.0",
+        "type": "go"
+      },
+      {
+      	"name": "nugethint",
+      	"version": "1.0.0",
+      	"type": "nuget"
+      },
+      {
+      	"name": "binaryhint",
+      	"version": "2.0.0",
+      	"type": "binary"
+      },
+      {
+		    "name": "rpmhint",
+		    "version": "5.2.4-3.el8",
+		    "type": "rpm"
+			},
+      {
+        "name": "debhint",
+        "version": "1.0.0",
+        "type": "dpkg"
+      },
+      {
+        "name": "pythonhint",
+        "version": "1.0.0",
+        "type": "python"
+      },
+      {
+        "name": "alpinehint",
+        "version": "1.0-r3",
+        "type": "apkg"
+      },
+      {
+        "name": "gemhint",
+        "version": "1.0.0",
+        "type": "gem"
+      },
+      {
+        "name": "npmhint",
+        "version": "1.0.0",
+        "type": "npm"
+      },
+      {
+        "name": "javahint",
+        "version": "1.0.0",
+        "type": "java"
+      }
+    ]
