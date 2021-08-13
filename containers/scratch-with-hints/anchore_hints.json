@@ -1,0 +1,42 @@
+{
+  "packages": [
+    {
+      "name": "wicked",
+      "version": "0.6.1",
+      "location": "/app/gems/specifications/wicked-0.9.0.gemspec",
+      "origin": "schneems",
+      "license": "MIT",
+      "source": "http://github.com/schneems/wicked",
+      "files": [
+        "README.md"
+      ],
+      "type": "gem"
+    },
+    {
+      "name": "safe-buffer",
+      "location": "/usr/lib/node_modules/npm/node_modules/string_decoder/node_modules/safe-buffer/package.json",
+      "license": "FREE-FOR-ALL",
+      "version": "100",
+      "type": "npm"
+    },
+    {
+      "name": "fedora-gpg-keys",
+      "version": "35-0.4",
+      "arch": "noarch",
+      "type": "rpm",
+      "license": "test-license"
+    },
+    {
+      "name": "developer-dan",
+      "origin": "com.twilio.jenkins",
+      "type": "java",
+      "version": "193.28"
+    },
+    {
+      "name": "py",
+      "version": "1.9.1",
+      "type": "python",
+      "location": "/usr/lib/python3.8/my-site-packages"
+    }
+  ]
+}
