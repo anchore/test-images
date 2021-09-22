@@ -49,7 +49,8 @@ jobs:
       - image: circleci/python:3.8
     environment: *global_environment_vars
     steps:
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: 20.10.7
       - checkout
       - run:
           name: run tests
@@ -60,7 +61,8 @@ jobs:
       - image: circleci/python:3.8
     environment: *global_environment_vars
     steps:
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: 20.10.7
       - checkout
       - run:
           name: lint Dockerfiles
@@ -72,7 +74,8 @@ jobs:
       - image: circleci/python:3.8
     environment: *global_environment_vars
     steps:
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: 20.10.7
       - checkout
       - <<: *attach_workspace
       - <<: *load_docker_image
