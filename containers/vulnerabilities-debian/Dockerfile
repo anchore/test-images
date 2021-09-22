@@ -11,7 +11,7 @@ RUN apt-get update && \
     apt-get install -y python3=3.7.3-1 && \
     apt-get -y install python3-pip=18.1-5  && \
     mkdir -p /usr/share/man/man1 && \
-    apt-get install -y openjdk-11-jdk=11.0.9.1+1-1~deb10u2  && \
+    apt-get install -y openjdk-11-jdk=11.0.12+7-2~deb10u1  && \
     apt-get install -y maven=3.6.0-1 && \
     apt-get install -y nodejs=10.24.0~dfsg-1~deb10u1 npm=5.8.0+ds6-4+deb10u2 && \
     gem install ftpd -v 0.2.1 && \

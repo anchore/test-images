@@ -8,12 +8,12 @@ COPY ./pom.xml pom.xml
 # now install packages using GEM, NPM, PIP, and Java
 
 RUN set -ex && \
-    apk --no-cache add ruby=2.7.2-r0 && \
+    apk --no-cache add ruby=2.7.4-r0 && \
     apk --no-cache add gcc=9.3.0-r2 musl-dev=1.1.24-r10 && \
-    apk --no-cache add python3=3.8.8-r0 python3-dev=3.8.8-r0 && \
+    apk --no-cache add python3=3.8.10-r0 python3-dev=3.8.10-r0 && \
     python3 -m ensurepip && \
     apk --no-cache add openjdk11=11.0.9_p11-r0  maven=3.6.3-r0 && \
-    apk --no-cache add nodejs=12.21.0-r0 npm=12.21.0-r0 && \
+    apk --no-cache add nodejs=12.22.6-r0 npm=12.22.6-r0 && \
     gem install ftpd -v 0.2.1 && \
     npm install xmldom@0.4.0 && \
     pip3 install --no-cache-dir aiohttp==3.7.3 && \
