@@ -9,3 +9,5 @@ between current analyzers and `syft`, where `syft` is going to have better accur
 * hpi
 
 Note that this workflow omits `jpi` since it is considered equal to `hpi`.
+
+Note: nomad has been added to include a vulnerability CVE-2021-21681.
