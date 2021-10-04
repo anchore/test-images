@@ -1,4 +1,5 @@
-NAME := $(shell pwd | rev | cut -d '/' -f 1 | rev)
+LAST_COMMIT := $(shell git rev-parse HEAD | cut -c 1-7)
+NAME := $(shell pwd | rev | cut -d '/' -f 1 | rev)-$(LAST_COMMIT)
 TEMPDIR = ./.tmp
 IMAGEDIRS = $(shell ls -d containers/* | cut -d '/' -f 2)
 BOLD := $(shell tput -T linux bold)
