@@ -1,5 +1,6 @@
 SHELL := /usr/bin/env bash
-IMAGEDIRS = $(shell ls -d containers/* | cut -d '/' -f 2)
+BASEBRANCH := main
+CHANGEDCONTAINERDIRS := $(shell git diff $(BASEBRANCH) --name-only containers/ | cut -d '/' -f1,2 | uniq)
 BOLD := $(shell tput -T linux bold)
 PURPLE := $(shell tput -T linux setaf 5)
 GREEN := $(shell tput -T linux setaf 2)
@@ -27,7 +28,7 @@ help:
 
 .PHONY: lint
 lint: ## Uses hadolint container to ensure Dockerfiles are clean
-	@for dir in $(shell ls -d containers/*); do \
+	@for dir in $(CHANGEDCONTAINERDIRS); do \
 		echo "Linting container: $${dir}"; \
 		pushd $${dir} || exit 1; \
 		make lint || exit 1; \
@@ -41,7 +42,7 @@ test: build link_check ## Lint first, and then build all containers
 
 .PHONY: build
 build: ## Create all containers in the containers sub directory
-	@for dir in $(shell ls -d containers/*); do \
+	@for dir in $(CHANGEDCONTAINERDIRS); do \
 		echo "Building container: $${dir}"; \
 		pushd $${dir} || exit 1; \
 		make build || exit 1; \
@@ -50,7 +51,7 @@ build: ## Create all containers in the containers sub directory
 
 .PHONY: push
 push: ## Create all containers and push them to docker hub
-	@for dir in $(shell ls -d containers/*); do \
+	@for dir in $(CHANGEDCONTAINERDIRS); do \
 		echo "Pushing container: $${dir}"; \
 		pushd $${dir} || exit 1; \
 		make push || exit 1; \
