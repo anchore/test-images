@@ -1,6 +1,5 @@
 SHELL := /usr/bin/env bash
-BASEBRANCH := main
-CHANGEDCONTAINERDIRS := $(shell git diff $(BASEBRANCH) --name-only containers/ | cut -d '/' -f1,2 | uniq)
+CHANGEDCONTAINERDIRS := $(shell git diff HEAD~1 --name-only containers/ | cut -d '/' -f1,2 | uniq)
 BOLD := $(shell tput -T linux bold)
 PURPLE := $(shell tput -T linux setaf 5)
 GREEN := $(shell tput -T linux setaf 2)

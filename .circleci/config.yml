@@ -97,11 +97,3 @@ workflows:
           context: dockerhub
           filters: *only_main_branch
 
-  weekly:
-    triggers:
-      - schedule:
-          cron: "0 0 1 * *"
-          filters: *only_main_branch
-
-    jobs:
-      - push
