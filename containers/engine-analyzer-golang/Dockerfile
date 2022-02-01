@@ -1,3 +1,4 @@
+# Used in engine functional tests
 # hadolint ignore=DL3006
 FROM docker.io/alpine:3.15.0 as go-src
 
