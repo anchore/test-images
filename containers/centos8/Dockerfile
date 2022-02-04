@@ -1,8 +1,7 @@
-# hadolint ignore=DL3006
-FROM registry.access.redhat.com/ubi8/ubi:8.1
+FROM registry.access.redhat.com/ubi8/ubi
+USER root
+LABEL maintainer="Anchore Test"
+# Update image
+RUN yum update --disableplugin=subscription-manager -y && rm -rf /var/cache/yum
+RUN yum install --disableplugin=subscription-manager cronie openscap -y && rm -rf /var/cache/yum
 
-# install Python3, and uses pip to install pytest
-# finally it removes the cache - all in one go to prevent another layer which we don't need
-RUN set -ex && \
-    dnf install -y cronie && \
-    dnf clean all
