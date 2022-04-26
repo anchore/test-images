@@ -46,7 +46,7 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: circleci/python:3.8
+      - image: cimg/python:3.8.4
     environment: *global_environment_vars
     steps:
       - setup_remote_docker:
@@ -58,7 +58,7 @@ jobs:
 
   lint:
     docker:
-      - image: circleci/python:3.8
+      - image: cimg/python:3.8.4
     environment: *global_environment_vars
     steps:
       - setup_remote_docker:
@@ -71,7 +71,7 @@ jobs:
   push:
     description: Uses make script to push images to DockerHub
     docker:
-      - image: circleci/python:3.8
+      - image: cimg/python:3.8.4
     environment: *global_environment_vars
     steps:
       - setup_remote_docker:
