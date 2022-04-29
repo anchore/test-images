@@ -34,6 +34,13 @@ lint: ## Uses hadolint container to ensure Dockerfiles are clean
 		popd > /dev/null; \
 	done
 
+.PHONY: new-image
+new-image: ## Stubs out a directory for a new container image to be added
+	mkdir -p containers/$(name)
+	pushd containers/$(name) && ln -s ../../ContainerMakefile Makefile && popd
+	touch containers/$(name)/Dockerfile
+	touch containers/$(name)/README.md
+
 
 .PHONY: test
 test: build link_check ## Lint first, and then build all containers
