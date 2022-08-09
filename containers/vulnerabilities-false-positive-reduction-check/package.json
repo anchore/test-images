@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "connect": "^3.7.0",
+    "couchbase": "^4.1.2",
+    "date": "^2.0.0",
+    "delegate": "^3.2.0",
+    "docker": "^1.0.0",
+    "file": "^0.2.2",
+    "fresh": "^0.5.2",
+    "git": "^0.1.5",
+    "mariadb": "^3.0.1",
+    "matrix": "^1.0.3",
+    "mongoose": "^6.5.1",
+    "mysql": "^2.18.1",
+    "php": "^1.0.2",
+    "postgres": "^3.2.4",
+    "protobufjs": "^6.6.0",
+    "python-format": "^1.0.2",
+    "redis": "^4.2.0",
+    "sirv": "^1.0.19",
+    "sync": "^0.2.5",
+    "through": "^2.3.8"
+  }
+}
