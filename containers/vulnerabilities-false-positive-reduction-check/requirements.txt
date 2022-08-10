@@ -9,3 +9,5 @@ github
 python-gitlab
 pymongo
 couchbase
+slash
+
