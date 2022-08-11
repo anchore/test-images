@@ -3,6 +3,7 @@ FROM docker.io/anchore/grype:v0.46.0 as grype
 FROM docker.io/anchore/syft:v0.53.4 as syft
 # Include a much older version of syft with some legitimate vulns as well as fps
 FROM docker.io/anchore/syft:v0.29.0 as syft-v0.29.0
+FROM docker.io/atlassian/jira-software:8.2.0 as jira-software
 
 FROM docker.io/library/node:16.16.0-slim as nodejs
 
@@ -43,3 +44,4 @@ COPY --from=nodejs /packages/ /usr/local/packages/npm/
 COPY --from=ruby /packages/ /usr/local/packages/ruby/
 COPY --from=python /packages/ /usr/local/packages/python/
 COPY --from=maven /packages/ /usr/local/packages/maven/
+COPY --from=jira-software /opt/atlassian/jira/ /opt/atlassian/jira-software/
