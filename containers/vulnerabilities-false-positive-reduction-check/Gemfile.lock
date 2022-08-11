@@ -67,9 +67,16 @@ GEM
     gitlab (4.19.0)
       httparty (~> 0.20)
       terminal-table (>= 1.5.1)
+    http (2.2.2)
+      addressable (~> 2.3)
+      http-cookie (~> 1.0)
+      http-form_data (~> 1.0.1)
+      http_parser.rb (~> 0.6.0)
     http-accept (1.7.0)
     http-cookie (1.0.5)
       domain_name (~> 0.5)
+    http-form_data (1.0.3)
+    http_parser.rb (0.6.0)
     httparty (0.20.0)
       mime-types (~> 3.0)
       multi_xml (>= 0.5.2)
@@ -82,6 +89,8 @@ GEM
     mime-types (3.4.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2022.0105)
+    minio-ruby (0.1.3)
+      http (~> 2.0)
     minitest (5.16.2)
     mongo (2.18.1)
       bson (>= 4.14.1, < 5.0.0)
@@ -152,8 +161,10 @@ DEPENDENCIES
   docker
   docker-api
   docker-compose
+  gitlab
   json
   matrix
+  minio-ruby
   mongo
   php-serialize
   postgres-pr
