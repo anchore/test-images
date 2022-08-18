@@ -5,6 +5,7 @@ FROM docker.io/anchore/syft:v0.53.4 as syft
 FROM docker.io/anchore/syft:v0.29.0 as syft-v0.29.0
 FROM docker.io/atlassian/jira-software:8.2.0 as jira-software
 FROM docker.io/atlassian/confluence:7.4.0 as confluence
+FROM docker.io/gitlab/gitlab-ce:15.0.3-ce.0 as gitlab
 
 FROM docker.io/library/node:16.16.0-slim as nodejs
 
@@ -47,3 +48,4 @@ COPY --from=python /packages/ /usr/local/packages/python/
 COPY --from=maven /packages/ /usr/local/packages/maven/
 COPY --from=jira-software /opt/atlassian/ /opt/atlassian/jira-software/
 COPY --from=confluence /opt/atlassian/ /opt/atlassian/confluence/
+COPY --from=gitlab /opt/gitlab/ /opt/gitlab/gitlab-ce/
