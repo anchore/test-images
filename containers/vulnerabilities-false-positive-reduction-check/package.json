@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "archiver": "^5.3.1",
+    "chainsaw": "^0.1.0",
     "connect": "^3.7.0",
     "couchbase": "^4.1.2",
     "date": "^2.0.0",

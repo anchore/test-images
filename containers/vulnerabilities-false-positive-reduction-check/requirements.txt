@@ -11,3 +11,5 @@ pymongo
 couchbase
 slash
 minio
+chainsaw
+artifactory
