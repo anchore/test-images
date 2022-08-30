@@ -32,10 +32,19 @@ RUN pip install --no-cache-dir -r requirements-lock.txt -t . --disable-pip-versi
 
 FROM docker.io/library/maven:3.8.6-jdk-11-slim as maven
 
+WORKDIR /downloads
+
+RUN curl -o chainsaw.zip "https://dlcdn.apache.org/logging/chainsaw/2.1.0/apache-chainsaw-2.1.0-bin.zip" 
+
 WORKDIR /packages
 COPY pom.xml /packages
 
 RUN mvn clean install && mvn package
+
+# hadolint ignore=DL3008
+RUN apt-get update \
+    && apt-get install unzip --no-install-recommends --assume-yes \
+    && unzip /downloads/chainsaw.zip -d /packages
 
 FROM scratch
 
@@ -49,3 +58,4 @@ COPY --from=maven /packages/ /usr/local/packages/maven/
 COPY --from=jira-software /opt/atlassian/ /opt/atlassian/jira-software/
 COPY --from=confluence /opt/atlassian/ /opt/atlassian/confluence/
 COPY --from=gitlab /opt/gitlab/ /opt/gitlab/gitlab-ce/
+
