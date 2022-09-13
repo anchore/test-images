@@ -1,0 +1,15 @@
+docker
+jira
+redis
+netaddr==0.8.0
+pathtools==0.1.2
+php
+kubernetes==19.15.0
+github
+python-gitlab
+pymongo
+couchbase
+slash
+minio
+chainsaw
+artifactory
