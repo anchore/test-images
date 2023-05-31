@@ -9,7 +9,6 @@ RED := $(shell tput -T linux setaf 1)
 RESET := $(shell tput -T linux sgr0)
 TITLE := $(BOLD)$(PURPLE)
 SUCCESS := $(BOLD)$(GREEN)
-BUILDX_NO_DEFAULT_ATTESTATIONS=1
 
 define title
     @printf '$(TITLE)$(1)$(RESET)\n'
@@ -37,10 +36,12 @@ push: build ## push built container to Docker Hub
 	anchore/test-images\:$(NAME)-no-arm64 \
 	--amend anchore/test-images\:$(NAME)-amd64-only \
 	--amend anchore/test-images\:$(NAME)-s390x-only
+	docker push anchore/test-images\:$(NAME)-no-arm64
 	docker manifest create \
 	anchore/test-images\:$(NAME)-no-amd64 \
 	--amend anchore/test-images\:$(NAME)-s390x-only \
 	--amend anchore/test-images\:$(NAME)-arm64-only
+	docker push anchore/test-images\:$(NAME)-no-amd64
 
 .PHONY: clean
 clean: ## Remove images with the assigned tag for test_images
