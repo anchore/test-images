@@ -23,9 +23,9 @@ lint:
 .PHONY: build
 build:
 	$(call title,Building container image anchore/test_image:$(NAME) variants)
-	docker build -t anchore/test-images:$(NAME)-amd64-only --build-arg ARCH=linux/amd64 .
-	docker build -t anchore/test-images:$(NAME)-s390x-only --build-arg ARCH=linux/s390x .
-	docker build -t anchore/test-images:$(NAME)-arm64-only --build-arg ARCH=linux/arm64 .
+	docker build -t anchore/test-images:$(NAME)-amd64-only --platform=linux/amd64 .
+	docker build -t anchore/test-images:$(NAME)-s390x-only --platform=linux/s390x .
+	docker build -t anchore/test-images:$(NAME)-arm64-only --platform=linux/arm64 .
 
 .PHONY: push
 push: build ## push built container to Docker Hub
