@@ -9,6 +9,7 @@ RED := $(shell tput -T linux setaf 1)
 RESET := $(shell tput -T linux sgr0)
 TITLE := $(BOLD)$(PURPLE)
 SUCCESS := $(BOLD)$(GREEN)
+export BUILDX_NO_DEFAULT_ATTESTATIONS := 1
 
 define title
     @printf '$(TITLE)$(1)$(RESET)\n'
