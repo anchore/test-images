@@ -10,7 +10,7 @@ cd "$SCRIPTPATH/../"
 
 # note: this can be easily done in a 1-liner, however circle CI does NOT allow volume mounts from the host in docker executors (since they are on remote hosts, where the host files are inaccessible)
 
-CTRID=$(docker create -u "$(id -u):$(id -g)" -v /example-java-app -w /example-java-app gradle:jdk gradle build)
+CTRID=$(docker create -u "$(id -u):$(id -g)" -v /example-java-app -w /example-java-app gradle:7-jdk gradle build)
 
 function cleanup() {
   docker rm "${CTRID}"
