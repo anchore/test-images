@@ -1,3 +1,4 @@
+https://download.newrelic.com/newrelic/java-agent/newrelic-agent/8.8.0/newrelic-agent-8.8.0.jar
 https://get.jenkins.io/plugins/nomad/0.7.4/nomad.hpi
 https://get.jenkins.io/plugins/TwilioNotifier/0.2.1/TwilioNotifier.hpi
 https://maven.xwiki.org/releases/org/xwiki/platform/xwiki-platform-oldcore/15.3/xwiki-platform-oldcore-15.3.jar
