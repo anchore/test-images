@@ -28,11 +28,17 @@
       ssh -MS anchore-api -fN4 -L 8228:localhost:8228 remote-docker
       ssh -MS k8s-api -fN4 -L 32768:localhost:32768 remote-docker
 
-.authenticate_to_docker: &authenticate_to_docker
+.authenticate_to_dockerhub: &authenticate_to_dockerhub
   run:
-    name: Authenticate to Docker
+    name: Authenticate to Dockerhub
     command: |
       echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+
+.authenticate_to_ghcrio: &authenticate_to_ghcrio
+  run:
+    name: Authenticate to ghcr.io
+    command: |
+      echo "${GHCRIO_PASS}" | docker login -u "${GHCRIO_USER}" --password-stdin
 
 .only_main_branch: &only_main_branch
   branches:
@@ -79,9 +85,10 @@ jobs:
       - checkout
       - <<: *attach_workspace
       - <<: *load_docker_image
-      - <<: *authenticate_to_docker
+      - <<: *authenticate_to_dockerhub
+      - <<: *authenticate_to_ghcrio
       - run:
-          name: Push to Dockerhub
+          name: Push to Registry
           command: make push
 
 workflows:
@@ -90,10 +97,12 @@ workflows:
       - test
       - lint
 
-  push_to_dockerhub:
+  push_to_registry:
     jobs:
       - push:
-          name: push_to_dockerhub
-          context: dockerhub-anchoredevwrite
+          name: Push to Registry
+          context: 
+            - dockerhub-anchoredevwrite
+            - ghcrio-anchoredevwrite
           filters: *only_main_branch
 
