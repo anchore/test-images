@@ -9,4 +9,5 @@ COPY --from=grype-quality-gate /usr/local/packages/maven/* /packages/
 COPY build/example-java-app-gradle-0.1.0.ear /packages
 COPY java_artifact_urls.txt /
 
-RUN xargs -a /java_artifact_urls.txt wget -nv 
+RUN xargs -a /java_artifact_urls.txt wget -nv && \
+    unzip ./gradle-7.1.1-bin.zip

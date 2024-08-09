@@ -95,3 +95,13 @@ https://repo1.maven.org/maven2/org/springframework/ws/spring-xml/3.0.3.RELEASE/s
 https://repo1.maven.org/maven2/org/xwiki/commons/xwiki-commons-xml/15.1/xwiki-commons-xml-15.1.jar
 https://repo1.maven.org/maven2/xalan/xalan/2.7.2/xalan-2.7.2.jar
 https://updates.jenkins-ci.org/download/war/1.390/hudson.war
+https://services.gradle.org/distributions/gradle-7.1.1-bin.zip
+https://updates.jenkins.io/download/plugins/gradle/1.36/gradle.hpi
+https://updates.jenkins.io/download/plugins/maven-plugin/3.10.1/maven-plugin.hpi
+https://updates.jenkins.io/download/plugins/script-security/1.74/script-security.hpi
+https://updates.jenkins.io/download/plugins/ssh-credentials/1.18.1/ssh-credentials.hpi
+https://updates.jenkins.io/download/plugins/junit/1.25/junit.hpi
+https://updates.jenkins.io/download/plugins/atlassian-bitbucket-server-integration/2.1.2/atlassian-bitbucket-server-integration.hpi
+https://updates.jenkins.io/download/plugins/aws-sam/1.2.2/aws-sam.hpi
+https://updates.jenkins.io/download/plugins/nuget/1.0/nuget.hpi
+https://updates.jenkins.io/download/plugins/generic-webhook-trigger/1.71/generic-webhook-trigger.hpi
