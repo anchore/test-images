@@ -1,5 +1,5 @@
 LAST_COMMIT := $(shell git rev-parse HEAD | cut -c 1-7)
-NAME := $(shell pwd | rev | cut -d '/' -f 1 | rev)-$(LAST_COMMIT)
+NAME := $(shell pwd | rev | cut -d '/' -f 1 | rev)
 TEMPDIR = ./.tmp
 IMAGEDIRS = $(shell ls -d containers/* | cut -d '/' -f 2)
 BOLD := $(shell tput -T linux bold)
@@ -10,6 +10,8 @@ RED := $(shell tput -T linux setaf 1)
 RESET := $(shell tput -T linux sgr0)
 TITLE := $(BOLD)$(PURPLE)
 SUCCESS := $(BOLD)$(GREEN)
+
+IMAGE := $(shell if [ -f image-name ]; then cat image-name; echo ':$(LAST_COMMIT)'; else echo "anchore/test_images:$(NAME)-$(LAST_COMMIT)"; fi)
 
 define title
     @printf '$(TITLE)$(1)$(RESET)\n'
@@ -23,10 +25,13 @@ all: lint build
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "$(BOLD)$(CYAN)%-25s$(RESET)%s\n", $$1, $$2}'
 
+.PHONY: image-name
+image-name: ## Display the image name
+	@echo $(IMAGE)
 
 .PHONY: lint
 lint: ## TODO: with hadolint or similar
-	$(call title,Building container image anchore/test_image:$(NAME))
+	$(call title,Building container image $(IMAGE))
 	docker run --rm -i hadolint/hadolint hadolint --ignore DL3033 - < Dockerfile
 
 .PHONY: build
@@ -36,15 +41,15 @@ build: ## build container with the current Dockerfile
 ifneq ("$(wildcard scripts/setup.sh)", "")
 	./scripts/setup.sh
 endif
-	$(call title,Building container image anchore/test_image:$(NAME))
-	docker build -t anchore/test_images:$(NAME) .
+	$(call title,Building container image $(IMAGE))
+	docker build -t $(IMAGE) .
 
 .PHONY: push
-push: build ## push built container to Docker Hub
-	$(call title,Pushing container image to docker hub anchore/test_image:$(NAME))
-	docker push anchore/test_images:$(NAME)
+push: build ## Push built container to Docker Hub
+	$(call title,Pushing container image to docker hub $(IMAGE))
+	docker push $(IMAGE)
 
 .PHONY: clean
 clean: ## Remove images with the assigned tag for test_images
-	$(call title,Removing image anchore/test_image:$(NAME))
-	docker rmi anchore/test_images:$(NAME)
+	$(call title,Removing image $(IMAGE))
+	docker rmi $(IMAGE)
