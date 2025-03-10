@@ -66,11 +66,7 @@ push: ## Create all containers and push them to docker hub
 
 
 link_check: ## Make sure that all symlinks are correct
-	@for makefile in $(shell find containers -name Makefile); do \
-		echo -n "Verifying Makefile link: $${makefile}"; \
-		if [[ $$(readlink $${makefile}) != "../../ContainerMakefile" ]]; then echo "Path is not linked to ../../ContainerMakefile -> $${makefile}" && exit 1; fi; \
-		echo "	[OK]"; \
-	done
+	@scripts/check_makefiles.sh
 
 %: ## do a local build
 	scripts/local.sh "$*"
