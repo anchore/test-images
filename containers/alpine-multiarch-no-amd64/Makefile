@@ -44,9 +44,11 @@ endif
 .PHONY: push
 push: build ## push built container to Docker Hub
 	$(call title,Pushing manifest list to docker hub anchore/test_image:$(NAME))
+	export DOCKER_CLI_EXPERIMENTAL=enabled; \
 	docker manifest push anchore/test_images:$(NAME)
 
 .PHONY: clean
 clean: ## Remove images with the assigned tag for test_images
 	$(call title,Removing image anchore/test_image:$(NAME))
+	export DOCKER_CLI_EXPERIMENTAL=enabled; \
 	docker manifest rm anchore/test_images:$(NAME)
