@@ -37,7 +37,7 @@ ifneq ("$(wildcard scripts/setup.sh)", "")
 endif
 	export DOCKER_CLI_EXPERIMENTAL=enabled; \
 	docker manifest create \
-	anchore/test_images:$(NAME)\
+	anchore/test_images:$(NAME) \
 	--amend alpine@sha256:13fceee8faadd52b154af4b9af3f6740d45a431b10c4a20da6ca1178ec487151 \
 	--amend alpine@sha256:afc845fd4ceb5a904087066567df0c2232929290e642c47c920227e65dc9937c
 
