@@ -1,0 +1,1 @@
+FROM docker.io/dimastopelmini/forgrype@sha256:ebe0c6ca122deef072c29be2f915130e5c8b4c277ad5ef551385f6496dae4dfa
