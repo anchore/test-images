@@ -6,7 +6,6 @@ RUN \
     python3-pip \
     php \
     npm \
-    nodejs
-
-RUN dnf -y downgrade --nogpgcheck python3-pip
+    nodejs && \
+    dnf -y clean all
 

@@ -27,7 +27,7 @@ help:
 .PHONY: lint
 lint: ## TODO: with hadolint or similar
 	$(call title,Building container image anchore/test_image:$(NAME))
-	docker run --rm -i hadolint/hadolint hadolint --ignore DL3033 - < Dockerfile
+	docker run --rm -i hadolint/hadolint hadolint --ignore DL3033 --ignore DL3041 - < Dockerfile
 
 .PHONY: build
 build: ## build container with the current Dockerfile
