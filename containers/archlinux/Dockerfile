@@ -1,8 +1,7 @@
 # Arch Linux test container with known vulnerable packages
 # Uses the Arch Linux Archive to install specific older package versions
 
-# hadolint ignore=DL3007
-FROM docker.io/archlinux/archlinux:latest
+FROM docker.io/archlinux/archlinux@sha256:d6869c0af41f1bd0495a038fc4ada04c05ef9094bcf012db087f79a3b8f1b3c2
 
 WORKDIR /sandbox
 
