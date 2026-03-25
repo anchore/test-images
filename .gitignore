@@ -1,2 +1,5 @@
 .history
 .idea/*
+
+# macOS Finder metadata
+.DS_STORE
