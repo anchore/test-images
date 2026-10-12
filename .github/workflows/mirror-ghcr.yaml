@@ -1,0 +1,47 @@
+name: "Mirror to GHCR"
+
+# copies repo-built tags from docker.io/anchore/test_images to ghcr.io/anchore/test-images.
+# Two runs must not plan against the same state, so runs queue instead of cancelling.
+concurrency:
+  group: mirror-ghcr
+  cancel-in-progress: false
+
+on:
+  workflow_dispatch:
+  schedule:
+    # off the top of the hour, which GitHub's scheduler crowds
+    - cron: '23 * * * *'
+
+permissions: {}
+
+jobs:
+  mirror:
+    name: "Mirror"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # first writes happen here as GITHUB_TOKEN, which links each new package to this repository
+      packages: write
+    env:
+      # optional: only removes Docker Hub rate limiting. A step `if` cannot read secrets directly.
+      DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+      DOCKERHUB_READ_TOKEN: ${{ secrets.DOCKERHUB_READ_TOKEN }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+        with:
+          persist-credentials: false
+
+      # installs crane and logs in to ghcr.io with GITHUB_TOKEN
+      - uses: imjasonh/setup-crane@feee3b6bb0d4c68370f256a4502498c9227e5c6b # v0.7
+        with:
+          version: v0.22.1
+
+      - name: Log in to Docker Hub
+        if: env.DOCKERHUB_USER != '' && env.DOCKERHUB_READ_TOKEN != ''
+        run: crane auth login index.docker.io -u "$DOCKERHUB_USER" --password-stdin <<< "$DOCKERHUB_READ_TOKEN"
+
+      - name: Run unit tests
+        run: python3 -m unittest discover -s scripts
+
+      - name: Mirror
+        run: make ghcr-mirror ARGS=--yes
