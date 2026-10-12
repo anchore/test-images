@@ -3,3 +3,5 @@
 
 # macOS Finder metadata
 .DS_STORE
+# python bytecode
+__pycache__/

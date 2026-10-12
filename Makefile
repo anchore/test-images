@@ -68,5 +68,13 @@ push: ## Create all containers and push them to docker hub
 link_check: ## Make sure that all symlinks are correct
 	@scripts/check_makefiles.sh
 
+.PHONY: ghcr-status
+ghcr-status: ## Show how many repo-built tags are mirrored to ghcr.io/anchore/test-images (read-only)
+	@python3 scripts/mirror_ghcr.py status
+
+.PHONY: ghcr-mirror
+ghcr-mirror: ## Show the plan to mirror missing tags to GHCR and ask before applying (ARGS=--yes skips the prompt)
+	@python3 scripts/mirror_ghcr.py mirror $(ARGS)
+
 %: ## do a local build
 	scripts/local.sh "$*"
