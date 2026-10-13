@@ -1,11 +1,6 @@
 name: "Mirror to GHCR"
 
 # copies repo-built tags from docker.io/anchore/test_images to ghcr.io/anchore/test-images.
-# Two runs must not plan against the same state, so runs queue instead of cancelling.
-concurrency:
-  group: mirror-ghcr
-  cancel-in-progress: false
-
 on:
   workflow_dispatch:
   pull_request:
@@ -16,8 +11,36 @@ on:
 permissions: {}
 
 jobs:
+  test:
+    name: "Test"
+    runs-on: ubuntu-latest
+    # read-only so a pull request branch never holds a token that can write packages
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: imjasonh/setup-crane@feee3b6bb0d4c68370f256a4502498c9227e5c6b # v0.7
+        with:
+          version: v0.22.1
+
+      - name: Run unit tests
+        run: python3 -m unittest discover -s scripts
+
+      # read-only, and exits 0 when tags are missing. Anonymous reads work because the packages are public.
+      - name: Mirror status
+        run: make ghcr-status
+
   mirror:
     name: "Mirror"
+    needs: test
+    if: github.event_name != 'pull_request'
+    # two runs must not plan against the same state, so runs queue instead of cancelling
+    concurrency:
+      group: mirror-ghcr
+      cancel-in-progress: false
     # the backfill is done and a normal run copies a few tags. A run that times out resumes from
     # what is still missing on the next schedule.
     timeout-minutes: 30
@@ -41,12 +64,8 @@ jobs:
           version: v0.22.1
 
       - name: Log in to Docker Hub
-        if: github.event_name != 'pull_request' && env.DOCKERHUB_USER != '' && env.DOCKERHUB_READ_TOKEN != ''
+        if: env.DOCKERHUB_USER != '' && env.DOCKERHUB_READ_TOKEN != ''
         run: crane auth login index.docker.io -u "$DOCKERHUB_USER" --password-stdin <<< "$DOCKERHUB_READ_TOKEN"
 
-      - name: Run unit tests
-        run: python3 -m unittest discover -s scripts
-
       - name: Mirror
-        if: github.event_name != 'pull_request'
         run: make ghcr-mirror ARGS=--yes
