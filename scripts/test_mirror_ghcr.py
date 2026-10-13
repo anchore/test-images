@@ -1,4 +1,8 @@
+import argparse
+import os
 import unittest
+from subprocess import CompletedProcess
+from unittest import mock
 
 import mirror_ghcr as m
 
@@ -112,6 +116,49 @@ class Mirrored(unittest.TestCase):
     def test_pairs_are_tags_present_at_both_addresses(self):
         got = m.mirrored(TAGS, IMAGES, dest(syft_bin={"cf22714", "0000000"}, centos8=set()))
         self.assertEqual(got, [("docker.io/anchore/test_images:syft_bin-cf22714", "ghcr.io/anchore/test-images/syft_bin:cf22714")])
+
+
+def done(rc=0, out="", err=""):
+    return CompletedProcess([], rc, out, err)
+
+
+def argvs(run):
+    return [c.args[0] for c in run.call_args_list]
+
+
+class CraneArgs(unittest.TestCase):
+    def test_list_source(self):
+        with mock.patch("mirror_ghcr.subprocess.run", return_value=done(out="a-1234567\n" * 800)) as run:
+            m.list_source()
+        self.assertEqual(argvs(run), [["crane", "ls", "docker.io/anchore/test_images"]])
+
+    def test_list_dest(self):
+        with mock.patch("mirror_ghcr.subprocess.run", return_value=done(out="abc1234\n")) as run:
+            self.assertEqual(m.list_dest("java"), {"abc1234"})
+        self.assertEqual(argvs(run), [["crane", "ls", "ghcr.io/anchore/test-images/java"]])
+
+    def test_list_dest_name_unknown_is_missing_package(self):
+        with mock.patch("mirror_ghcr.subprocess.run", return_value=done(1, err="NAME_UNKNOWN: repository name not known")):
+            self.assertIsNone(m.list_dest("java"))
+
+    def test_list_dest_other_error_aborts(self):
+        with mock.patch("mirror_ghcr.subprocess.run", return_value=done(1, err="DENIED: requested access to the resource is denied")):
+            with self.assertRaises(m.Abort):
+                m.list_dest("java")
+
+    def test_copy(self):
+        rows = [("docker.io/anchore/test_images:java-56d52bc", "ghcr.io/anchore/test-images/java:56d52bc", True)]
+        with mock.patch("mirror_ghcr.build_plan", return_value=([], {}, rows)), \
+                mock.patch.dict(os.environ, {"GITHUB_ACTIONS": "true"}), \
+                mock.patch("mirror_ghcr.subprocess.run", return_value=done()) as run:
+            self.assertEqual(m.cmd_mirror(argparse.Namespace(yes=True)), 0)
+        self.assertEqual(argvs(run), [["crane", "copy", rows[0][0], rows[0][1]]])
+
+    def test_verify(self):
+        src, dst = "docker.io/anchore/test_images:java-56d52bc", "ghcr.io/anchore/test-images/java:56d52bc"
+        with mock.patch("mirror_ghcr.subprocess.run", return_value=done(out="sha256:aa\n")) as run:
+            self.assertEqual(m.verify([(src, dst)]), 0)
+        self.assertEqual(argvs(run), [["crane", "digest", src], ["crane", "digest", dst]])
 
 
 if __name__ == "__main__":
