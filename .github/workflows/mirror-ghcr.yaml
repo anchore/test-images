@@ -18,6 +18,9 @@ permissions: {}
 jobs:
   mirror:
     name: "Mirror"
+    # the backfill is done and a normal run copies a few tags. A run that times out resumes from
+    # what is still missing on the next schedule.
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     permissions:
       contents: read
