@@ -108,5 +108,11 @@ class Plan(unittest.TestCase):
         self.assertEqual(self.rows(full), [])
 
 
+class Mirrored(unittest.TestCase):
+    def test_pairs_are_tags_present_at_both_addresses(self):
+        got = m.mirrored(TAGS, IMAGES, dest(syft_bin={"cf22714", "0000000"}, centos8=set()))
+        self.assertEqual(got, [("docker.io/anchore/test_images:syft_bin-cf22714", "ghcr.io/anchore/test-images/syft_bin:cf22714")])
+
+
 if __name__ == "__main__":
     unittest.main()

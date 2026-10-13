@@ -39,7 +39,7 @@ of the directory, which in this case is `new`. The end result will create the fo
 Pushed images are also mirrored to GitHub Container Registry as `ghcr.io/anchore/test-images/<directory>:<sha>`, where `<sha>` is the 7 character commit
 suffix of the Docker Hub tag (`anchore/test_images:java-56d52bc` is `ghcr.io/anchore/test-images/java:56d52bc`). The mirror runs hourly from
 `.github/workflows/mirror-ghcr.yaml`, so a new image can take up to an hour to appear there. The digest is the same at both addresses.
-`make ghcr-status` shows how many tags are mirrored and which are missing. Because the directory name is part of both addresses, renaming a directory
+`make ghcr-status` shows how many tags are mirrored and which are missing, and `make ghcr-status ARGS=--verify` also compares the digests of every mirrored tag at both addresses. Because the directory name is part of both addresses, renaming a directory
 publishes a differently named image in both places.
 
 

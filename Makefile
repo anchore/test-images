@@ -69,8 +69,8 @@ link_check: ## Make sure that all symlinks are correct
 	@scripts/check_makefiles.sh
 
 .PHONY: ghcr-status
-ghcr-status: ## Show how many repo-built tags are mirrored to ghcr.io/anchore/test-images (read-only)
-	@python3 scripts/mirror_ghcr.py status
+ghcr-status: ## Show how many repo-built tags are mirrored to ghcr.io/anchore/test-images (read-only, ARGS=--verify compares digests)
+	@python3 scripts/mirror_ghcr.py status $(ARGS)
 
 .PHONY: ghcr-mirror
 ghcr-mirror: ## Show the plan to mirror missing tags to GHCR and ask before applying (ARGS=--yes skips the prompt)

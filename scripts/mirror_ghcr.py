@@ -64,6 +64,34 @@ def plan(source_tags, images, dest_state):
     return sorted(rows)
 
 
+def mirrored(source_tags, images, dest_state):
+    """Return sorted (source ref, destination ref) pairs for tags present at both addresses."""
+    pairs = []
+    for tag in source_tags:
+        parsed = parse_tag(tag)
+        if parsed is None or parsed[0] not in images:
+            continue
+        image, sha = parsed
+        if sha in (dest_state[image] or ()):
+            pairs.append((f"{SOURCE}:{tag}", f"{DEST}/{image}:{sha}"))
+    return sorted(pairs)
+
+
+def verify(pairs):
+    """Compare source and destination digests sequentially. Return the number of bad pairs."""
+    bad = 0
+    for src, dst in pairs:
+        digests = []
+        for ref in (src, dst):
+            res = crane("digest", ref)
+            digests.append(res.stdout.strip() if res.returncode == 0 else f"error: {res.stderr.strip().splitlines()[-1] if res.stderr.strip() else res.returncode}")
+        if digests[0] != digests[1] or any(d.startswith("error:") for d in digests):
+            bad += 1
+            print(f"{src} {digests[0]} {dst} {digests[1]}")
+    print(f"verified {len(pairs)} tags, {bad} mismatched")
+    return bad
+
+
 def crane(*args, env=None):
     try:
         return subprocess.run(["crane", *args], capture_output=True, text=True, env=env)
@@ -147,7 +175,7 @@ def cmd_mirror(args):
     return 0
 
 
-def cmd_status(_args):
+def cmd_status(args):
     source_tags, dest_state, rows = build_plan()
     images = {p.name for p in CONTAINERS_DIR.iterdir() if p.is_dir()}
     built = sum(1 for t in source_tags if (p := parse_tag(t)) and p[0] in images)
@@ -179,13 +207,19 @@ def cmd_status(_args):
         print("\npackages not readable anonymously:")
         for repo in private:
             print(f"  {repo}")
+
+    if args.verify:
+        print()
+        return 1 if verify(mirrored(source_tags, images, dest_state)) else 0
     return 0
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = parser.add_subparsers(dest="command", required=True)
-    sub.add_parser("status", help="read-only summary of mirror progress").set_defaults(fn=cmd_status)
+    status = sub.add_parser("status", help="read-only summary of mirror progress")
+    status.add_argument("--verify", action="store_true", help="also compare source and destination digests of every mirrored tag")
+    status.set_defaults(fn=cmd_status)
     mirror = sub.add_parser("mirror", help="print the plan, confirm, then copy")
     mirror.add_argument("--yes", action="store_true", help="apply without prompting")
     mirror.set_defaults(fn=cmd_mirror)
