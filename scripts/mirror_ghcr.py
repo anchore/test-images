@@ -22,6 +22,10 @@ DEST = "ghcr.io/anchore/test-images"
 # held 878 tags when this was written and only grows.
 MIN_SOURCE_TAGS = 800
 
+# consecutive failed copies before giving up. Three in a row usually means a credential
+# problem or a rate limit, and every later copy would fail the same way.
+MAX_CONSECUTIVE_FAILURES = 3
+
 CONTAINERS_DIR = Path(__file__).resolve().parent.parent / "containers"
 
 SHA_RE = re.compile(r"[0-9a-f]{7}")
@@ -167,11 +171,24 @@ def cmd_mirror(args):
         if input("\nApply? [y/N] ").strip().lower() not in ("y", "yes"):
             return 0
 
+    failed = []
+    streak = 0
     for src, dst, _ in rows:
         print(f"copying {src} -> {dst}", flush=True)
-        if subprocess.run(["crane", "copy", src, dst]).returncode != 0:
-            print(f"copy failed: {src}", file=sys.stderr)
-            return 1
+        if subprocess.run(["crane", "copy", src, dst]).returncode == 0:
+            streak = 0
+            continue
+        print(f"copy failed: {src}", file=sys.stderr)
+        failed.append(src)
+        streak += 1
+        if streak >= MAX_CONSECUTIVE_FAILURES:
+            print(f"stopping after {streak} failed copies in a row", file=sys.stderr)
+            break
+    if failed:
+        print(f"\n{len(failed)} failed copies:", file=sys.stderr)
+        for src in failed:
+            print(f"  {src}", file=sys.stderr)
+        return 1
     return 0
 
 

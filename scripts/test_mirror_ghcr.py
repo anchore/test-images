@@ -154,6 +154,23 @@ class CraneArgs(unittest.TestCase):
             self.assertEqual(m.cmd_mirror(argparse.Namespace(yes=True)), 0)
         self.assertEqual(argvs(run), [["crane", "copy", rows[0][0], rows[0][1]]])
 
+    def run_copies(self, results):
+        rows = [(f"{m.SOURCE}:java-000000{i}", f"{m.DEST}/java:000000{i}", False) for i in range(len(results))]
+        runs = iter(done(rc) for rc in results)
+        with mock.patch("mirror_ghcr.build_plan", return_value=([], {}, rows)), \
+                mock.patch("mirror_ghcr.subprocess.run", side_effect=lambda *a, **k: next(runs)) as run:
+            rc = m.cmd_mirror(argparse.Namespace(yes=True))
+        return rc, run.call_count
+
+    def test_copy_continues_past_a_failure(self):
+        self.assertEqual(self.run_copies([0, 1, 0, 0]), (1, 4))
+
+    def test_consecutive_failures_reset_on_success(self):
+        self.assertEqual(self.run_copies([1, 1, 0, 1, 1, 0]), (1, 6))
+
+    def test_copy_stops_after_three_failures_in_a_row(self):
+        self.assertEqual(self.run_copies([1, 1, 1, 0, 0]), (1, 3))
+
     def test_verify(self):
         src, dst = "docker.io/anchore/test_images:java-56d52bc", "ghcr.io/anchore/test-images/java:56d52bc"
         with mock.patch("mirror_ghcr.subprocess.run", return_value=done(out="sha256:aa\n")) as run:
