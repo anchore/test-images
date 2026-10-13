@@ -8,6 +8,7 @@ concurrency:
 
 on:
   workflow_dispatch:
+  pull_request:
   schedule:
     # off the top of the hour, which GitHub's scheduler crowds
     - cron: '23 * * * *'
@@ -37,11 +38,12 @@ jobs:
           version: v0.22.1
 
       - name: Log in to Docker Hub
-        if: env.DOCKERHUB_USER != '' && env.DOCKERHUB_READ_TOKEN != ''
+        if: github.event_name != 'pull_request' && env.DOCKERHUB_USER != '' && env.DOCKERHUB_READ_TOKEN != ''
         run: crane auth login index.docker.io -u "$DOCKERHUB_USER" --password-stdin <<< "$DOCKERHUB_READ_TOKEN"
 
       - name: Run unit tests
         run: python3 -m unittest discover -s scripts
 
       - name: Mirror
+        if: github.event_name != 'pull_request'
         run: make ghcr-mirror ARGS=--yes
