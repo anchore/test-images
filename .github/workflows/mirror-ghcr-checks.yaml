@@ -1,0 +1,29 @@
+name: "Mirror to GHCR checks"
+
+on:
+  pull_request:
+
+permissions: {}
+
+jobs:
+  test:
+    name: "Test"
+    runs-on: ubuntu-latest
+    # read-only so a pull request branch never holds a token that can write packages
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: imjasonh/setup-crane@feee3b6bb0d4c68370f256a4502498c9227e5c6b # v0.7
+        with:
+          version: v0.22.1
+
+      - name: Run unit tests
+        run: python3 -m unittest discover -s scripts
+
+      # read-only, and exits 0 when tags are missing. Anonymous reads work because the packages are public.
+      - name: Mirror status
+        run: make ghcr-status
