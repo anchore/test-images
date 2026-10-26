@@ -17,6 +17,11 @@ jobs:
         with:
           persist-credentials: false
 
+      # the runner image still trusted the compromised eMudhra CAs as of
+      # https://github.com/actions/runner-images/issues/15018. Drop this once that is fixed.
+      - name: Update CA certificates
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq --only-upgrade ca-certificates && dpkg-query -W ca-certificates
+
       - uses: imjasonh/setup-crane@feee3b6bb0d4c68370f256a4502498c9227e5c6b # v0.7
         with:
           version: v0.22.1
